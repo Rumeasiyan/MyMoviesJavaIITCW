@@ -13,3 +13,10 @@
 .externalNativeBuild
 .cxx
 local.properties
+.kotlin
+.kotlin_module
+.idea
+.vscode
+.vscode/
+.vscode/extensions.json
+.vscode/settings.json
