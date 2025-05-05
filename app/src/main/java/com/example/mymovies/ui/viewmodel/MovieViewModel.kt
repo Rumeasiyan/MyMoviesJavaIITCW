@@ -30,26 +30,42 @@ class MovieViewModel(context: Context) : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching: StateFlow<Boolean> = _isSearching
+
     fun searchMovieByTitle(title: String) {
         viewModelScope.launch {
-            repository.searchMovieByTitle(title)
-                .onSuccess { _searchResult.value = it }
-                .onFailure { _error.value = it.message }
+            _isLoading.value = true
+            try {
+                repository.searchMovieByTitle(title)
+                    .onSuccess { _searchResult.value = it }
+                    .onFailure { _error.value = it.message }
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
     fun searchMovies(query: String) {
         viewModelScope.launch {
-            repository.searchMovies(query)
-                .onSuccess { response ->
-                    response.Search?.map { searchMovie ->
-                        repository.searchMovieByTitle(searchMovie.Title)
-                            .getOrNull()
-                    }?.filterNotNull()?.let {
-                        _searchResults.value = it
+            _isSearching.value = true
+            try {
+                repository.searchMovies(query)
+                    .onSuccess { response ->
+                        response.Search?.map { searchMovie ->
+                            repository.searchMovieByTitle(searchMovie.Title)
+                                .getOrNull()
+                        }?.filterNotNull()?.let {
+                            _searchResults.value = it
+                        }
                     }
-                }
-                .onFailure { _error.value = it.message }
+                    .onFailure { _error.value = it.message }
+            } finally {
+                _isSearching.value = false
+            }
         }
     }
 

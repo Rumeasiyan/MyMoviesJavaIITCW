@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.mymovies.data.db.MovieEntity
@@ -16,6 +17,7 @@ fun SearchActorsScreen(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val databaseMovies by viewModel.databaseMovies.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -33,9 +35,21 @@ fun SearchActorsScreen(
 
         Button(
             onClick = { viewModel.searchMoviesByActor(searchQuery) },
+            enabled = !isLoading,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Search")
+        }
+
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
 
         LazyColumn(
@@ -62,7 +76,11 @@ fun MovieCard(movie: MovieEntity) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text("Title: ${movie.title}")
+            Text(
+                text = movie.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(4.dp))
             Text("Year: ${movie.year}")
             Text("Director: ${movie.director}")
             Text("Actors: ${movie.actors}")

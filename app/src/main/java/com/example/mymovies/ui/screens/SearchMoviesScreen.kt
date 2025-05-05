@@ -16,6 +16,7 @@ fun SearchMoviesScreen(
     var searchQuery by remember { mutableStateOf("") }
     val searchResult by viewModel.searchResult.collectAsState()
     val error by viewModel.error.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -36,15 +37,28 @@ fun SearchMoviesScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                onClick = { viewModel.searchMovieByTitle(searchQuery) }
+                onClick = { viewModel.searchMovieByTitle(searchQuery) },
+                enabled = !isLoading
             ) {
                 Text("Retrieve Movie")
             }
 
             Button(
-                onClick = { viewModel.saveCurrentMovie() }
+                onClick = { viewModel.saveCurrentMovie() },
+                enabled = searchResult != null && !isLoading
             ) {
                 Text("Save to Database")
+            }
+        }
+
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
         }
 
