@@ -18,7 +18,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Add OMDB API key
-        buildConfigField("String", "OMDB_API_KEY", "\"41eb72cd\"")
+        buildConfigField("String", "OMDB_API_KEY", "\"a1a9f90e\"")
     }
 
     buildTypes {
