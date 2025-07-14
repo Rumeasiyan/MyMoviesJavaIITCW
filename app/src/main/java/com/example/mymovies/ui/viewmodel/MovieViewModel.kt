@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class MovieViewModel(context: Context) : ViewModel() {
     private val repository = MovieRepository(
-        api = NetworkModule.omdbApiService,
+        apiHelper = NetworkModule.omdbApiHelper,
         dao = DatabaseModule.getMovieDao(context)
     )
 

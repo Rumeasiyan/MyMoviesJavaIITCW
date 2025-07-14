@@ -1,23 +1,6 @@
 package com.example.mymovies.data.api
 
-import com.example.mymovies.BuildConfig
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
-
-interface OmdbApiService {
-    @GET("/")
-    suspend fun searchMovieByTitle(
-        @Query("t") title: String,
-        @Query("apikey") apiKey: String = BuildConfig.OMDB_API_KEY
-    ): Response<MovieResponse>
-
-    @GET("/")
-    suspend fun searchMovies(
-        @Query("s") searchQuery: String,
-        @Query("apikey") apiKey: String = BuildConfig.OMDB_API_KEY
-    ): Response<SearchResponse>
-}
+// Only data classes for OMDb API responses are defined here.
 
 data class MovieResponse(
     val Title: String,
